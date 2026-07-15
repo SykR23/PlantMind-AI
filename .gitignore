@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+
+# FAISS
+*.faiss
+*.pkl
+
+# HuggingFace
+.cache/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Streamlit cache
+.streamlit/
+
+# Pytest
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
