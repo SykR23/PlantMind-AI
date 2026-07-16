@@ -10,10 +10,25 @@ class PromptBuilder:
             self,
             query: str,
             documents: list[Document],
+            history: list[dict]
     ) -> str:
         """
         Build a grounded prompt using the retrieved documents.
         """
+        history_text = ""
+
+        recent_history = history[-8:]
+
+        for message in recent_history:
+
+            role = message["role"].capitalize()
+
+            content = message["content"]
+
+            history_text += (
+                f"{role}: {content}\n\n"
+            )
+
         context = ""
 
         for document in documents:
@@ -34,15 +49,30 @@ class PromptBuilder:
     """
 
         prompt = f"""{config.SYSTEM_PROMPT}
-    ========================= CONTEXT =========================
+        
+    ====================CONVERSATION HISTORY====================
+
+    {history_text}
+
+    ====================RETRIEVED CONTEXT=======================
 
     {context}
 
-    ===========================================================
+    =============================================================
 
-    USER QUESTION:
+    CURRENT QUESTION:
 
     {query}
+    
+    ======================INSTRUCTIONS==========================
+
+   1. Answer ONLY using the retrieved context. 
+   2. Use the conversation history only to understand references
+      such as "it", "that", "previous step", etc.
+   3. If the answer is not contained in the retrieved context,
+      reply exactly:
+
+   "I couldn't find enough information in the supplied documents."
 
     ===========================================================
 

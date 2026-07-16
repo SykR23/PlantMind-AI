@@ -1,60 +1,117 @@
-# app.py
+import streamlit as st
 
-from pathlib import Path
+from config.config import config
 
-from ingestion.loader import PDFLoader
-
-from ingestion.cleaner import DocumentCleaner
-
-from ingestion.metadata import MetadataManager
-
-from ingestion.splitter import DocumentSplitter
+from ui.sidebar import Sidebar
+from ui.chat import ChatUI
+from ui.session import SessionManager
+from ui.styles import Styles
+from ui.home import Home
 
 from retrieval.faiss_manager import FAISSManager
+from retrieval.retriever import PlantRetriever
 
-pdf = Path(
-    "knowledge_bases/heat_exchangers/raw/EN_Manual.pdf"
+from llm.model import PlantMindLLM
+from llm.prompt_builder import PromptBuilder
+
+from chains.rag_chain import PlantMindRAG
+
+
+@st.cache_resource
+def build_rag(kb_name: str):
+    faiss = FAISSManager()
+
+    faiss.load_vector_store(config.get_faiss_path(knowledge_base))
+
+    retriever = PlantRetriever(faiss)
+
+    llm = PlantMindLLM()
+
+    builder = PromptBuilder()
+
+    return PlantMindRAG(
+        retriever,
+        llm,
+        builder
+    )
+
+
+# Page Configuration
+st.set_page_config(
+    page_title=config.APP_TITLE,
+    page_icon=config.APP_ICON,
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
-loader = PDFLoader()
 
-cleaner = DocumentCleaner()
+# Initialize UI
+Styles.load()
 
-metadata = MetadataManager()
+SessionManager.initialize()
 
-documents = loader.load_pdf(pdf)
+# Sidebar
+knowledge_base = Sidebar.render()
 
-documents = cleaner.clean(documents)
+# Build Backend
+rag = build_rag(knowledge_base)
 
-splitter = DocumentSplitter()
-documents = splitter.split(documents)
+# Display Previous Messages
+if len(st.session_state.messages) == 0:
+    Home.render()
+else:
+    ChatUI.display_history()
 
-documents = metadata.enrich(
-    documents,
-    pdf,
-    "heat_exchangers"
+# Chat Input
+query = st.chat_input(
+    "Ask a question.."
 )
+if query:
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": query,
+        }
+    )
+    with st.chat_message("user"):
+        st.markdown(query)
 
-save_path = Path(
-    "knowledge_bases/heat_exchangers/faiss"
-)
+    with st.spinner("🌿 PlantMind is searching the knowledge base..."):
+        response = rag.run(query=query, history=st.session_state.messages)
 
-faiss_manager = FAISSManager()
+    print("\n" + "=" * 80)
+    print("RAG RESPONSE")
+    print("=" * 80)
+    print(type(response))
+    print(response)
+    print(response.keys() if isinstance(response, dict) else "Not a dict")
+    print("=" * 80)
 
-faiss_manager.load_vector_store(save_path)
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": response["answer"],
+            "documents": response["documents"]
+        }
+    )
 
-results = faiss_manager.similarity_search(
-    query="plate",
-    k=3,
-)
+    with st.chat_message("assistant"):
+        st.markdown(response["answer"])
+        ChatUI.display_sources(response["documents"])
 
-for i, document in enumerate(results):
+    with st.container():
+        col1, col2, col3 = st.columns(3)
 
-    print(f"\nResult {i+1}")
+        col1.metric(
+            "Knowledge Base",
+            knowledge_base.replace("_", " ").title()
+        )
 
-    print(document.metadata)
+        col2.metric(
+            "Retrieved Docs",
+            len(response["documents"])
+        )
 
-    print()
-
-    print(document.page_content)
-
-    print("=" * 100)
+        col3.metric(
+            "Model",
+            config.LLM_MODEL
+        )
