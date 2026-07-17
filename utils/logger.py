@@ -45,3 +45,6 @@ class PlantMindLogger:
         cls._logger = logger
 
         return logger
+
+
+logger = PlantMindLogger().get_logger()

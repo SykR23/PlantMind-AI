@@ -2,25 +2,30 @@ from pathlib import Path
 
 
 class Config:
+    APP_TITLE = "PlantMind AI"
+    APP_DESCRIPTION = (
+        "Enterprise RAG Copilot for Process Industries"
+    )
+    APP_ICON = "🌿"
 
     ROOT_DIR = Path(__file__).resolve().parent.parent
-
+    KNOWLEDGE_BASE_ROOT = ROOT_DIR / "knowledge_bases"
     DEFAULT_KB = "heat_exchangers"
 
-    KNOWLEDGE_BASE_ROOT = ROOT_DIR / "knowledge_bases"
-
-    CHUNK_SIZE = 500
-    CHUNK_OVERLAP = 100
+    LOG_DIR = ROOT_DIR / "logs"
+    LOG_FILE = LOG_DIR / "plantmind.log"
 
     EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
     DEVICE = "cpu"
+    LLM_MODEL = "qwen2.5:3b"
+    TEMPERATURE = 0.2
 
     SEARCH_TYPE = "similarity"
     TOP_K = 3
     FETCH_K = 10
 
-    LLM_MODEL = "qwen2.5:3b"
-    TEMPERATURE = 0.2
+    CHUNK_SIZE = 500
+    CHUNK_OVERLAP = 100
 
     NO_CONTEXT_RESPONSE = (
         "I couldn't find enough information in the supplied documents."
@@ -48,17 +53,6 @@ present the answer as numbered steps.
 
 Keep the answer concise, technically accurate and professional.
 """
-
-    APP_TITLE = "PlantMind AI"
-
-    APP_DESCRIPTION = (
-        "Enterprise RAG Copilot for Process Industries"
-    )
-
-    APP_ICON = "🌿"
-
-    LOG_DIR = ROOT_DIR / "logs"
-    LOG_FILE = LOG_DIR / "plantmind.log"
 
     @classmethod
     def get_kb_path(cls, kb_name: str) -> Path:
