@@ -2,8 +2,8 @@
 .env
 
 # Knowledge bases (raw PDFs stay, generated indexes don't)
-knowledge_bases/**/faiss/
-knowledge_bases/**/embeddings/
+#knowledge_bases/**/faiss/
+#knowledge_bases/**/embeddings/
 
 # Python
 __pycache__/
@@ -21,10 +21,6 @@ venv/
 # Logs
 logs/
 *.log
-
-# FAISS
-*.faiss
-*.pkl
 
 # HuggingFace
 .cache/
