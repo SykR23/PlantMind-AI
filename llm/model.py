@@ -1,8 +1,5 @@
 from config.config import config
 
-from llm.ollama import OllamaLLM
-from llm.groq import GroqLLM
-
 
 class PlantMindLLM:
 
@@ -11,9 +8,11 @@ class PlantMindLLM:
         provider = config.LLM_PROVIDER.lower()
 
         if provider == "ollama":
+            from llm.ollama import OllamaLLM
             self.llm = OllamaLLM()
 
         elif provider == "groq":
+            from llm.groq import GroqLLM
             self.llm = GroqLLM()
 
         else:
