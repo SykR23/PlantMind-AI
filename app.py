@@ -21,7 +21,7 @@ from chains.rag_chain import PlantMindRAG
 def build_rag(kb_name: str):
     faiss = FAISSManager()
 
-    faiss.load_vector_store(config.get_faiss_path(knowledge_base))
+    faiss.load_vector_store(config.get_faiss_path(kb_name))
 
     retriever = PlantRetriever(faiss)
 

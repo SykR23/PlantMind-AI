@@ -84,9 +84,4 @@ class PlantMindRAG:
 
             logger.exception("Error while executing pipeline")
 
-            return {
-                "query": query,
-                "retrieval_query": "",
-                "answer": "An unexpected error occurred",
-                "documents": []
-            }
+            raise

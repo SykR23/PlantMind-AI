@@ -1,5 +1,9 @@
 from pathlib import Path
+import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
     APP_TITLE = "PlantMind AI"
@@ -15,10 +19,12 @@ class Config:
     LOG_DIR = ROOT_DIR / "logs"
     LOG_FILE = LOG_DIR / "plantmind.log"
 
-    EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
-    DEVICE = "cpu"
-    LLM_MODEL = "qwen2.5:3b"
-    TEMPERATURE = 0.2
+    EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
+    DEVICE = os.getenv("DEVICE", "cpu")
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
+    LLM_MODEL = os.getenv("LLM_MODEL", "qwen2.5:3b")
+    TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
     SEARCH_TYPE = "similarity"
     TOP_K = 3

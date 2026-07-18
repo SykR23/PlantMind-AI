@@ -14,7 +14,7 @@ class ConversationMemory:
     def add_assistant_message(self, message: str):
         self.messages.append(
             {
-                "role": "user",
+                "role": "assistant",
                 "content": message
             }
         )

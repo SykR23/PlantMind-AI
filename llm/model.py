@@ -1,15 +1,23 @@
-from langchain_ollama import ChatOllama
-
 from config.config import config
+
+from llm.ollama import OllamaLLM
+from llm.groq import GroqLLM
 
 
 class PlantMindLLM:
+
     def __init__(self):
-        self.llm = ChatOllama(
-            model = config.LLM_MODEL,
-            temperature = config.TEMPERATURE
-        )
+
+        provider = config.LLM_PROVIDER.lower()
+
+        if provider == "ollama":
+            self.llm = OllamaLLM()
+
+        elif provider == "groq":
+            self.llm = GroqLLM()
+
+        else:
+            raise ValueError(f"Unsupported LLM provider: {provider}")
 
     def generate(self, prompt: str) -> str:
-        response = self.llm.invoke(prompt)
-        return response.content
+        return self.llm.generate(prompt)

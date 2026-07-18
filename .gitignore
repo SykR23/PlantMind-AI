@@ -1,3 +1,10 @@
+# Environment Variables
+.env
+
+# Knowledge bases (raw PDFs stay, generated indexes don't)
+knowledge_bases/**/faiss/
+knowledge_bases/**/embeddings/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -14,9 +21,6 @@ venv/
 # Logs
 logs/
 *.log
-
-# Environment
-.env
 
 # FAISS
 *.faiss
