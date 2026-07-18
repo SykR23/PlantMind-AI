@@ -1,132 +1,180 @@
 # PlantMind-AI
 
-> **Enterprise Retrieval-Augmented Generation (RAG) Copilot for Process Industries**
+> **An AI-powered Retrieval-Augmented Generation (RAG) copilot for process industries.**
 
-PlantMind-AI is a modular, production-oriented Retrieval-Augmented Generation (RAG) system designed for engineering knowledge bases. It enables engineers to query technical documents using natural language while generating grounded, context-aware answers from local documentation.
+PlantMind-AI is a modular engineering assistant that enables engineers to query technical manuals and domain-specific documentation using natural language. It combines semantic search with Large Language Models (LLMs) to provide grounded, context-aware answers instead of hallucinated responses.
 
-Unlike generic "Chat with PDF" applications, PlantMind-AI is built with scalability, maintainability, and backend engineering best practices in mind.
+🔗 **Live Demo:** https://plantmind-ai-ewjxqd3ubd9pg2bqbh3uac.streamlit.app/
 
 ---
 
 ## ✨ Features
 
--  Multi-Knowledge Base Architecture
--  FAISS Vector Search
--  Local LLM Inference with Ollama
--  BAAI/bge-small-en-v1.5 Embeddings
--  FastAPI REST Backend
--  Streamlit User Interface
--  Dynamic PDF Ingestion Pipeline
--  Conversation Memory
--  Swagger / OpenAPI Documentation
--  Dependency Injection Architecture
--  Centralized Validation Layer
--  Structured Logging
--  Config-Driven Design
+-  Dynamic PDF ingestion pipeline
+-  Retrieval-Augmented Generation (RAG)
+-  FAISS vector search
+-  HuggingFace BGE embeddings
+-  Groq LLM integration
+-  Provider-agnostic LLM architecture (Groq / Ollama)
+-  Multi-knowledge-base architecture
+-  Source-aware responses
+-  Streamlit deployment
+-  Configuration-driven design
 
 ---
 
-# Project Architecture
+# Demo
 
-```text
-                    User
-                      │
-          ┌───────────┴───────────┐
-          │                       │
-      Streamlit UI          FastAPI API
-          │                       │
-          └───────────┬───────────┘
-                      │
-                PlantMind RAG
-                      │
-     ┌────────────────┼────────────────┐
-     │                │                │
-Retriever       Prompt Builder      Ollama
-     │                                 │
-     ▼                                 ▼
-   FAISS                      Qwen2.5:3B
-     │
-     ▼
-Knowledge Base
+<img src="assets/demo.gif" width="100%">
+
+*(Replace with screenshots or GIF later.)*
+
+---
+
+# Architecture
+
+```
+                        User Query
+                             │
+                             ▼
+                     Streamlit Frontend
+                             │
+                             ▼
+                      PlantMind RAG
+                             │
+          ┌──────────────────┴─────────────────┐
+          ▼                                    ▼
+   HuggingFace Embeddings                 FAISS Retriever
+          │                                    │
+          └──────────────┬─────────────────────┘
+                         ▼
+                  Relevant Chunks
+                         │
+                         ▼
+                  Prompt Construction
+                         │
+                         ▼
+                  Groq / Ollama LLM
+                         │
+                         ▼
+                     Final Answer
 ```
 
 ---
 
-# 📂 Project Structure
+# Tech Stack
 
-```text
+| Category | Technologies |
+|----------|--------------|
+| Language | Python |
+| LLM | Groq, Ollama |
+| Framework | LangChain |
+| Embeddings | HuggingFace BAAI/bge-small-en-v1.5 |
+| Vector Database | FAISS |
+| Frontend | Streamlit |
+| Backend | FastAPI |
+| Deployment | Streamlit Community Cloud |
+| Document Processing | PyPDF |
+
+---
+
+# Project Structure
+
+```
 PlantMind-AI/
 │
-├── api/                    # FastAPI backend
-├── chains/                 # RAG chains
-├── config/                 # Configuration
-├── ingestion/              # PDF ingestion pipeline
-├── knowledge_manager/      # Knowledge base management
-├── llm/                    # LLM wrapper
-├── retrieval/              # Retrieval & RAG logic
-├── tests/                  # Unit tests
-├── ui/                     # Streamlit frontend
-├── utils/                  # Logging & utilities
-│
-├── knowledge_bases/
-│   └── heat_exchangers/
-│       ├── raw/
-│       └── faiss/
-│
 ├── app.py
-├── ingest.py
-└── requirements.txt
+├── config/
+├──chains/
+├── ingestion/
+├── retrieval/
+├── rag/
+├── llm/
+├── prompts/
+├── knowledge_bases/
+│   ├── heat_exchangers/
+│   ├── pumps/
+│   ├── process_control/
+│   └── safety/
+├── ui/
+├── utils/
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-# 🛠️ Tech Stack
+# Current Workflow
 
-| Category | Technology |
-|----------|------------|
-| Language | Python |
-| Backend | FastAPI |
-| Frontend | Streamlit |
-| LLM | Ollama (Qwen2.5:3B) |
-| Embeddings | BAAI/bge-small-en-v1.5 |
-| Vector Database | FAISS |
-| Framework | LangChain |
-| Documentation | Swagger / OpenAPI |
+```
+PDF Documents
+      │
+      ▼
+Document Loader
+      │
+      ▼
+Chunking
+      │
+      ▼
+Embedding Generation
+      │
+      ▼
+FAISS Index
+      │
+      ▼
+User Query
+      │
+      ▼
+Semantic Retrieval
+      │
+      ▼
+LLM
+      │
+      ▼
+Grounded Response
+```
+
+---
+
+# Supported Knowledge Bases
+
+- ✅ Heat Exchangers
+- 🚧 Pumps
+- 🚧 Process Control
+- 🚧 Industrial Safety
 
 ---
 
 # Installation
 
-## Clone the Repository
+Clone the repository
 
 ```bash
 git clone https://github.com/SykR23/PlantMind-AI.git
 cd PlantMind-AI
 ```
 
----
-
-## Create a Virtual Environment
+Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-### Windows
+Activate
+
+Windows
 
 ```bash
 .venv\Scripts\activate
 ```
 
-### Linux / macOS
+Linux/macOS
 
 ```bash
 source .venv/bin/activate
 ```
 
----
-
-## Install Dependencies
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -134,55 +182,26 @@ pip install -r requirements.txt
 
 ---
 
-# Running Ollama
+# Environment Variables
 
-Start Ollama
+Create a `.env`
 
-```bash
-ollama serve
-```
+```env
+GROQ_API_KEY=YOUR_API_KEY
 
-Download the model (first time only)
+LLM_PROVIDER=groq
+LLM_MODEL=llama-3.3-70b-versatile
 
-```bash
-ollama pull qwen2.5:3b
-```
+EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
 
----
+DEVICE=cpu
 
-# Ingest Documents
-
-Place your PDFs inside
-
-```text
-knowledge_bases/<knowledge_base>/raw/
-```
-
-Run
-
-```bash
-python ingest.py
-```
-
-or use the FastAPI `/ingest` endpoint.
-
----
-
-# Launch the FastAPI Server
-
-```bash
-uvicorn api.server:app --reload
-```
-
-Open Swagger
-
-```
-http://127.0.0.1:8000/docs
+TEMPERATURE=0.2
 ```
 
 ---
 
-# Launch Streamlit
+# Running
 
 ```bash
 streamlit run app.py
@@ -190,27 +209,13 @@ streamlit run app.py
 
 ---
 
-# REST API
+# Example Questions
 
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/knowledge_bases` | List all available knowledge bases |
-| POST | `/chat` | Ask questions to the selected knowledge base |
-| POST | `/ingest` | Ingest a knowledge base |
-
----
-
-# Current Capabilities
-
-- Semantic document retrieval
-- Context-aware question answering
-- Multi-document support
-- Dynamic knowledge base management
-- Local LLM inference
-- Engineering-focused responses
-- REST API
-- Interactive UI
+- What are refrigerants?
+- How do I clean a brazed plate heat exchanger?
+- What is the purpose of a gasket?
+- Explain fouling in plate heat exchangers.
+- Which heat exchanger should be selected for food applications?
 
 ---
 
@@ -218,40 +223,47 @@ streamlit run app.py
 
 ## Completed
 
-- Multi Knowledge Base Support
-- FastAPI Backend
-- Streamlit Frontend
-- Dependency Injection
-- Validation Layer
-- Structured Logging
-- Swagger Documentation
-- Config-Driven Architecture
+- [x] Modular RAG pipeline
+- [x] PDF ingestion
+- [x] FAISS indexing
+- [x] HuggingFace embeddings
+- [x] Groq integration
+- [x] Ollama integration
+- [x] Streamlit deployment
+- [x] Source attribution
 
 ## In Progress
 
-- Evaluation Framework
-- Automated Testing
-- Docker Support
-- CI/CD
+- [ ] FastAPI backend
+- [ ] Railway deployment
+- [ ] Multi-KB selector
+- [ ] Response streaming
+- [ ] Docker support
 
 ## Planned
 
-- Hybrid Search (Dense + BM25)
-- Cross Encoder Reranking
-- Authentication
-- Multi-user Support
-- Cloud Deployment
+- [ ] React frontend
+- [ ] Hybrid Search (BM25 + FAISS)
+- [ ] Cross-Encoder reranking
+- [ ] Conversation memory
+- [ ] Authentication
+- [ ] Admin dashboard
 
 ---
 
-# 👨‍💻 Author
+# Why PlantMind-AI?
+
+Traditional chatbots often hallucinate technical information.
+
+PlantMind-AI retrieves relevant information directly from engineering manuals before generating responses, ensuring answers remain grounded in authoritative documentation.
+
+The project demonstrates a production-oriented RAG architecture with modular components, configurable LLM providers, and scalable knowledge base support.
+
+---
+
+# Author
 
 **Sayak Roy**
 
-Chemical Engineering Undergraduate, NIT Durgapur
-
-Interested in AI, NLP, Retrieval-Augmented Generation (RAG), Computer Vision, and Backend Engineering.
-
----
-
-⭐ If you found this project useful, consider giving it a star!
+Chemical Engineering Undergraduate  
+National Institute of Technology Durgapur
