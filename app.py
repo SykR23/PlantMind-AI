@@ -16,25 +16,11 @@ from llm.prompt_builder import PromptBuilder
 
 from chains.rag_chain import PlantMindRAG
 
+from rag.build import build_rag
 
 @st.cache_resource
-def build_rag(kb_name: str):
-    faiss = FAISSManager()
-
-    faiss.load_vector_store(config.get_faiss_path(kb_name))
-
-    retriever = PlantRetriever(faiss)
-
-    llm = PlantMindLLM()
-
-    builder = PromptBuilder()
-
-    return PlantMindRAG(
-        retriever,
-        llm,
-        builder
-    )
-
+def get_rag(kb_name):
+    return build_rag(kb_name)
 
 # Page Configuration
 st.set_page_config(
@@ -53,7 +39,7 @@ SessionManager.initialize()
 knowledge_base = Sidebar.render()
 
 # Build Backend
-rag = build_rag(knowledge_base)
+rag = get_rag(knowledge_base)
 
 # Display Previous Messages
 if len(st.session_state.messages) == 0:

@@ -17,10 +17,10 @@ class DocumentEmbedder:
     def embed_documents(self,
                         documents: list[Document],
                         ) -> list[list[float]]:
-        texts = {
+        texts = [
             document.page_content
             for document in documents
-        }
+        ]
         embeddings = self.embedding_model.embed_documents(
             texts
         )

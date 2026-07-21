@@ -4,7 +4,7 @@ from api.schemas import ChatRequest, ChatResponse, IngestRequest, IngestResponse
 
 from utils.logger import logger
 
-from api.dependencies import container
+from api.dependencies import build_rag, clear_rag
 
 from api.validators import (validate_knowledge_base,
                             validate_query,
@@ -58,7 +58,7 @@ def chat(request: ChatRequest):
     validate_query(request.query)
     validate_vector_store(request.knowledge_base)
     try:
-        rag = container.get_rag(request.knowledge_base)
+        rag = build_rag(request.knowledge_base)
         response = rag.run(
             query=request.query,
             history=[]
@@ -110,7 +110,7 @@ def ingest(request: IngestRequest):
     try:
         pipeline.ingest(request.knowledge_base)
 
-        container.clear_retriever(request.knowledge_base)
+        clear_rag(request.knowledge_base)
 
         return IngestResponse(
             status="success",

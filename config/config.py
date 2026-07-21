@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class Config:
     APP_TITLE = "PlantMind AI"
     APP_DESCRIPTION = (
@@ -26,12 +27,12 @@ class Config:
     TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-    SEARCH_TYPE = "similarity"
-    TOP_K = 3
-    FETCH_K = 10
+    SEARCH_TYPE = os.getenv("SEARCH_TYPE", "similarity")
+    TOP_K = int(os.getenv("TOP_K", "3"))
+    FETCH_K = int(os.getenv("FETCH_K", "10"))
 
-    CHUNK_SIZE = 500
-    CHUNK_OVERLAP = 100
+    CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "500"))
+    CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "100"))
 
     NO_CONTEXT_RESPONSE = (
         "I couldn't find enough information in the supplied documents."

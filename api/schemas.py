@@ -21,7 +21,7 @@ class HealthResponse(BaseModel):
 
 
 class KnowledgeBaseResponse(BaseModel):
-    knowledge_base: list[str]
+    knowledge_bases: list[str]
 
 
 class IngestResponse(BaseModel):
